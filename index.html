@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>番茄小说下载器 · 液态玻璃版 — 官方主页</title>
+<meta name="description" content="番茄小说下载器 · 液态玻璃版（Tomato Novel Downloader Glass Edition）：WebView2 液态玻璃桌面界面 + 番茄小说下载内核，搜索、下载、更新一体的桌面工具。">
+<style>
+:root{
+  --bg:#070a14;
+  --ink-0:#f2f5ff;
+  --ink-1:#b6bdd6;
+  --ink-2:#7d86a8;
+  --accent-1:#22d3ee;
+  --accent-2:#8b5cf6;
+  --accent-3:#f472b6;
+  --glass-bg:rgba(255,255,255,.055);
+  --glass-border:rgba(255,255,255,.11);
+  --glass-highlight:rgba(255,255,255,.13);
+  --shadow-soft:0 12px 40px rgba(0,0,0,.45);
+  --font:"Segoe UI","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink-0);
+  min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+/* ---- aurora 背景 ---- */
+.aurora{position:fixed;inset:0;z-index:-2;overflow:hidden;background:linear-gradient(160deg,#0a0f1f 0%,#070a14 55%,#0b1020 100%);}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;mix-blend-mode:screen;animation:drift 26s ease-in-out infinite alternate;}
+.blob.b1{width:52vw;height:52vw;left:-12vw;top:-16vw;background:radial-gradient(circle at 30% 30%,rgba(34,211,238,.55),transparent 60%);}
+.blob.b2{width:44vw;height:44vw;right:-10vw;top:8vh;background:radial-gradient(circle at 60% 40%,rgba(139,92,246,.5),transparent 60%);animation-delay:-8s;}
+.blob.b3{width:40vw;height:40vw;left:28vw;bottom:-18vw;background:radial-gradient(circle at 50% 50%,rgba(244,114,182,.32),transparent 60%);animation-delay:-16s;}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(4vw,-3vh) scale(1.12)}}
+.grain{position:fixed;inset:0;z-index:-1;opacity:.05;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");}
+/* ---- 容器 ---- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+/* ---- 导航 ---- */
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;padding:14px 28px;
+  background:rgba(7,10,20,.55);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+  border-bottom:1px solid rgba(255,255,255,.08);}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:16px;letter-spacing:.3px;}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  display:grid;place-items:center;box-shadow:0 6px 18px rgba(34,211,238,.35);}
+.brand .logo svg{width:20px;height:20px;}
+nav .spacer{flex:1;}
+nav a.nlink{color:var(--ink-1);text-decoration:none;font-size:13.5px;padding:7px 12px;border-radius:9px;transition:all .16s;}
+nav a.nlink:hover{color:var(--ink-0);background:rgba(255,255,255,.07);}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:13px;font-size:14px;font-weight:600;
+  text-decoration:none;cursor:pointer;border:1px solid transparent;transition:all .18s ease;font-family:var(--font);}
+.btn.primary{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#081018;
+  box-shadow:0 8px 26px rgba(34,211,238,.35), inset 0 1px 0 rgba(255,255,255,.35);}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,92,246,.45), inset 0 1px 0 rgba(255,255,255,.4);}
+.btn.ghost{background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--ink-0);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 var(--glass-highlight);}
+.btn.ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px);}
+/* ---- Hero ---- */
+.hero{padding:96px 0 56px;text-align:center;position:relative;}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;font-size:12.5px;color:var(--ink-1);
+  background:var(--glass-bg);border:1px solid var(--glass-border);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);margin-bottom:26px;}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 0 10px rgba(34,211,238,.8);}
+.hero h1{font-size:clamp(34px,5.4vw,58px);font-weight:800;letter-spacing:-.5px;line-height:1.15;
+  background:linear-gradient(120deg,#fff 20%,#9fe9ff 50%,#c4b5fd 80%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero .sub{margin:22px auto 0;max-width:620px;color:var(--ink-1);font-size:16px;line-height:1.8;}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap;}
+.hero .meta{margin-top:20px;color:var(--ink-2);font-size:13px;}
+/* ---- 特性 ---- */
+.section{padding:72px 0;}
+.section h2{font-size:28px;font-weight:750;text-align:center;margin-bottom:14px;}
+.section .lead{text-align:center;color:var(--ink-2);font-size:14.5px;max-width:560px;margin:0 auto 44px;line-height:1.8;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;}
+.card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:26px 24px;
+  -webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);
+  box-shadow:var(--shadow-soft), inset 0 1px 0 var(--glass-highlight);transition:transform .2s ease;}
+.card:hover{transform:translateY(-4px);}
+.card .ico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(139,92,246,.22));border:1px solid rgba(255,255,255,.14);}
+.card .ico svg{width:22px;height:22px;stroke:var(--accent-1);}
+.card h3{font-size:16.5px;font-weight:650;margin-bottom:8px;}
+.card p{color:var(--ink-1);font-size:13.5px;line-height:1.75;}
+/* ---- 截图 ---- */
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;}
+.shot{border-radius:18px;overflow:hidden;border:1px solid var(--glass-border);
+  box-shadow:var(--shadow-soft);background:rgba(255,255,255,.03);}
+.shot img{width:100%;display:block;aspect-ratio:1180/760;object-fit:cover;}
+.shot .cap{padding:13px 16px;font-size:13px;color:var(--ink-1);background:rgba(255,255,255,.04);}
+/* ---- 架构 ---- */
+.arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;}
+.step{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;padding:22px;position:relative;}
+.step .num{position:absolute;top:-12px;left:20px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:700;color:#081018;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));}
+.step h4{font-size:14.5px;margin-bottom:8px;margin-top:6px;}
+.step p{color:var(--ink-2);font-size:12.8px;line-height:1.7;}
+code{font-family:Consolas,"Cascadia Mono",monospace;font-size:12px;background:rgba(255,255,255,.07);padding:2px 7px;border-radius:6px;color:#9fe9ff;}
+/* ---- 作者 ---- */
+.author-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:22px;align-items:center;}
+.author-card{display:flex;gap:22px;align-items:center;background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:22px;padding:30px;box-shadow:var(--shadow-soft), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
+.avatar{width:96px;height:96px;border-radius:50%;flex:none;position:relative;
+  background:linear-gradient(135deg,#1b2436,#0e1526);border:2px solid rgba(255,255,255,.18);display:grid;place-items:center;
+  box-shadow:0 0 0 6px rgba(139,92,246,.14), 0 14px 30px rgba(0,0,0,.4);overflow:hidden;}
+.avatar svg{width:64%;height:64%;}
+.author-card .who{font-size:20px;font-weight:750;}
+.author-card .role{color:var(--ink-2);font-size:13px;margin-top:4px;}
+.links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:12.5px;color:var(--ink-1);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-decoration:none;transition:all .16s;}
+.chip:hover{color:var(--ink-0);background:rgba(255,255,255,.11);transform:translateY(-1px);}
+.about p{color:var(--ink-1);font-size:14px;line-height:1.9;}
+.about .thx{margin-top:16px;padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.04);
+  border:1px dashed rgba(255,255,255,.14);font-size:13px;color:var(--ink-2);line-height:1.7;}
+.about .thx a{color:var(--accent-1);text-decoration:none;}
+/* ---- 页脚 ---- */
+footer{padding:44px 0 36px;text-align:center;color:var(--ink-2);font-size:12.8px;border-top:1px solid rgba(255,255,255,.06);margin-top:40px;line-height:1.9;}
+@media (max-width:760px){ .author-wrap{grid-template-columns:1fr;} .author-card{flex-direction:column;text-align:center;} .links{justify-content:center;} }
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain"></div>
+
+<nav>
+  <div class="brand">
+    <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#0a1220" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    番茄小说下载器 · 液态玻璃版
+  </div>
+  <div class="spacer"></div>
+  <a class="nlink" href="#features">特性</a>
+  <a class="nlink" href="#shots">预览</a>
+  <a class="nlink" href="#author">作者</a>
+  <a class="btn primary" href="https://github.com/jeantechno/tomato-glass/releases/latest" target="_blank" rel="noopener">下载</a>
+</nav>
+
+<header class="hero wrap">
+  <span class="badge"><span class="dot"></span>v2.4.15 · Windows · 免费开源</span>
+  <h1>番茄小说下载器<br>液态玻璃版</h1>
+  <p class="sub">基于 Rust 下载内核的桌面客户端。无边框液态玻璃窗口、极光磨砂质感、WebView2 渲染，搜索 / 下载 / 任务 / 历史 / 更新 / 下载库一应俱全。</p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/jeantechno/tomato-glass/releases/latest" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载 Windows 版
+    </a>
+    <a class="btn ghost" href="#shots">界面预览</a>
+  </div>
+  <p class="meta">仅需 WebView2 Runtime（Windows 10/11 自带 Edge 即可）· 内核自动托管，关闭即回收</p>
+</header>
+
+<section class="section wrap" id="features">
+  <h2>液态玻璃，不止好看</h2>
+  <p class="lead">深色极光磨砂的窗口与面板、圆角与丙烯酸模糊，把命令行工具变成了真正可用的桌面产品。</p>
+  <div class="grid">
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <h3>液态玻璃界面</h3><p>无边框窗口 + DWM 丙烯酸模糊 + 圆角，极光渐变背景与磨砂面板，视觉与交互统一。</p></div>
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="13" x2="14" y2="13"/></svg></div>
+      <h3>WebView2 渲染</h3><p>界面由 WebView2（Edge 内核）渲染，同源本地代理与下载内核通信，无需浏览器与额外配置。</p></div>
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <h3>搜索即下载</h3><p>支持书名、Book ID、分享链接（fanqienovel.com / changdunovel.com）搜索，预览章节与格式后一键创建任务。</p></div>
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 6"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <h3>任务与重试</h3><p>实时进度轮询、取消 / 重试 / 书名与格式再配置，失败章节一键续传。</p></div>
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+      <h3>更新追踪</h3><p>扫描本地书目，发现最新章节一键更新；下载历史完整可查。</p></div>
+    <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg></div>
+      <h3>配置灵活</h3><p>快捷 / 完整 / YAML 三种配置方式，格式、线程、超时、API、有声书参数自由调。</p></div>
+  </div>
+</section>
+
+<section class="section wrap" id="shots">
+  <h2>界面预览</h2>
+  <p class="lead">搜索、概览、设置——同一套液态玻璃设计语言。</p>
+  <div class="shots">
+    <div class="shot"><img src="assets/shot-search.png" alt="搜索页" loading="lazy"><div class="cap">搜索 · 书名 / Book ID / 分享链接</div></div>
+    <div class="shot"><img src="assets/shot-status.png" alt="概览页" loading="lazy"><div class="cap">概览 · 内核状态与保存目录</div></div>
+    <div class="shot"><img src="assets/shot-settings.png" alt="设置页" loading="lazy"><div class="cap">设置 · 两列玻璃卡片配置</div></div>
+  </div>
+</section>
+
+<section class="section wrap">
+  <h2>技术架构</h2>
+  <p class="lead">原生 C# 壳 + WebView2 前端 + Rust 下载内核，三层各司其职。</p>
+  <div class="arch">
+    <div class="step"><span class="num">1</span><h4>桌面壳</h4><p>C# WinForms 无边框窗口，DWM 丙烯酸模糊、圆角、八向缩放，自动托管内核进程，关闭即回收。</p></div>
+    <div class="step"><span class="num">2</span><h4>WebView2 前端</h4><p>HTML / CSS / JS 渲染液态玻璃 UI，经本地同源代理访问内核 API，无需浏览器。</p></div>
+    <div class="step"><span class="num">3</span><h4>Rust 内核</h4><p>开源 <code>zhongbai2333/Tomato-Novel-Downloader</code>（v2.4.15）<code>--server</code> 模式，提供全部下载能力。</p></div>
+  </div>
+</section>
+
+<section class="section wrap" id="author">
+  <h2>关于作者</h2>
+  <p class="lead">这个液态玻璃改造与官网，来自一位喜欢把工具做得好看的独立开发者。</p>
+  <div class="author-wrap">
+    <div class="author-card">
+      <div class="avatar">
+        <svg viewBox="0 0 120 120" fill="none">
+          <defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+          <circle cx="60" cy="60" r="60" fill="#0d1322"/>
+          <path d="M60 34a18 18 0 1 1 0 36 18 18 0 0 1 0-36z" fill="url(#ag)"/>
+          <path d="M22 104c4-22 20-32 38-32s34 10 38 32" stroke="url(#ag)" stroke-width="9" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="who">解域江安</div>
+        <div class="role">独立开发者 · 液态玻璃桌面工具作者</div>
+        <div class="links">
+          <a class="chip" href="https://qm.qq.com/q/1124717353" target="_blank" rel="noopener">QQ 群 1124717353</a>
+          <a class="chip" href="https://www.douyin.com/user/self" target="_blank" rel="noopener">抖音 · 解域江安</a>
+          <a class="chip" href="https://www.kuaishou.com" target="_blank" rel="noopener">快手 · 解安</a>
+          <a class="chip" href="https://jeantechno.github.io/rebox/" target="_blank" rel="noopener">REBox 工具箱</a>
+        </div>
+      </div>
+    </div>
+    <div class="about">
+      <p>把命令行工具做成看得见、摸得着的桌面产品：液态玻璃窗口、极光磨砂、圆角交互，让下载这件事也有一点质感。</p>
+      <p>本项目改造自开源项目 <a href="https://github.com/zhongbai2333/Tomato-Novel-Downloader" target="_blank" rel="noopener">Tomato-Novel-Downloader</a>（Rust，v2.4.15）。下载能力来自内核，界面与本壳由作者独立完成。</p>
+      <div class="thx">致谢：内核作者 <b>zhongbai2333</b> 的开源工作；WebView2 由 Microsoft Edge 提供。仅供学习与技术交流，请尊重作品版权。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>番茄小说下载器 · 液态玻璃版 Tomato Novel Downloader Glass Edition</div>
+  <div>© 2026 解域江安 · 本页面为项目官网 · GitHub Pages 托管</div>
+</footer>
+</body>
+</html>
