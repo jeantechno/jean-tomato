@@ -1,0 +1,39 @@
+番茄小说下载器 · 液态玻璃版 — GitHub 上传说明
+============================================
+
+一、上传内容（本目录全部文件）
+----------------------------
+上传到 GitHub 新仓库：jeantechno/jean-tomato（分支 main）
+
+  index.html                  官网主页（液态玻璃风格，含作者介绍）
+  assets\shot-search.png      搜索页截图
+  assets\shot-status.png      概览页截图
+  assets\shot-settings.png    设置页截图
+  README.md                   仓库说明
+  TomatoNovelDownloader-Glass.zip   软件发布包（254KB）
+
+二、仓库创建与推送
+------------------
+1. GitHub 网页新建仓库，仓库名必须为 jean-tomato，Public。
+2. 用网页上传全部文件（Upload files），或已本地 git 仓库直接 push：
+   git remote add origin https://github.com/jeantechno/jean-tomato.git
+   git push -u origin main
+   （本地仓库已初始化并 commit 好：C:\Users\technology\Doubao\chats\2026-09-26\new-chat-4\jean-tomato-官网）
+
+三、开启 GitHub Pages（官网地址）
+--------------------------------
+仓库 Settings → Pages → Source 选 "Deploy from a branch" → Branch 选 main / root → Save。
+约 1 分钟后官网生效：https://jeantechno.github.io/jean-tomato/
+
+四、上传 Release（软件下载）
+----------------------------
+仓库 Releases → Create a new release：
+  Tag: v2.4.15
+  标题：番茄小说下载器 · 液态玻璃版 v2.4.15
+  附件：TomatoNovelDownloader-Glass.zip
+发布后官网「下载」按钮（指向 releases/latest）即可直达。
+
+五、可选
+--------
+官网作者卡中的 QQ 群链接目前是占位（qm.qq.com/q/1124717353），
+如有真实加群短链，替换 index.html 中对应 href 后重新上传即可。
